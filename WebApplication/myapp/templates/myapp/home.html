@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet"> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+    <title>Crowd Predictor</title>
+    <style>
+      html
+      {
+        scroll-behavior:smooth;
+      }
+      *
+      {
+        /* font-size: 19px; */
+        font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+        /* font-family: "Source Sans Pro", sans-serif; */
+      }
+      body
+      {
+        
+        opacity: 0;
+        transition: opacity 0s;
+        /* font-family: 'Lato', sans-serif;      */
+        /* background-color:#f5f8fb;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0'%3E%3Cstop offset='0' stop-color='%230FF'/%3E%3Cstop offset='1' stop-color='%23CF6'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='2'%3E%3Cpath transform='translate(0 0)' d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='4' transform='rotate(0 800 450)' cx='500' cy='100' r='40'/%3E%3Cpath transform='translate(0 0)' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='4'%3E%3Cpath transform='translate(0 0)' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='8' transform='rotate(0 1089 759)' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='rotate(0 1400 132)' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        background-attachment: fixed;
+        background-size: cover; */
+      }
+      img
+      {
+        border-radius: 5px;
+        border: 1px solid #e7e7e7;
+        /* box-shadow: 0 0 10px; */
+        max-width: 80%;
+        max-height: 800px;
+        background-size: cover;
+        display: block; /* remove extra space below image */
+      }
+      .outer
+      {
+        border-radius: 5px;
+        padding: 0px;
+        border: 1px solid #e7e7e7;
+        background: white;
+        width: 600px;
+        max-width: 95%;
+      }
+
+      form
+      {
+        /* padding: 50px; */
+        /* border: 1px solid red; */
+      }
+      
+      input[type="file"]
+      {
+        /* background-color: red; 
+        background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00); */
+        border: 1px solid rgb(224, 224, 224);
+        padding: 5px;
+        transition: 0.3s;
+        border-radius: 5px;
+      }
+      input[type="submit"]
+      {
+        font-weight:bolder;
+        transition: 0.4s;
+        height: 42px;
+        width:160px;
+        border-radius: 5px;
+        border: 1px solid #00B9F1;
+        color: #00B9F1;
+      }
+      input[type="file"]:hover
+      {
+        border: 1px dashed #00B9F1;
+      }
+      input[type="submit"]:hover
+      {
+        background: #00B9F1;
+        color: white;
+        /* background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00); */
+      } 
+
+      ::-webkit-file-upload-button 
+      {
+        height: 50px;
+        border: 1px solid rgb(224, 224, 224);
+        width: 150px;
+        border-radius: 3px;
+        background: #00B9F1;
+        /* background-color: red; /* For browsers that do not support gradients */
+        /* background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00); */ 
+        color: white;
+        /* padding: 1em; */
+      }
+
+      .results
+      {
+        padding: 20px;
+        /* border: 1px solid rgb(224, 224, 224); */
+        border-radius: 3px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 100%;
+    /* height: 0; */
+        /* max-width: 81%;
+        max-height: 810px; */
+        background: white;
+        /* width: auto; */
+      }
+
+      .download
+      {
+        border: 2px solid rgb(224, 224, 224);  
+        width: 250px;
+        height: 55px;
+        transition: 0.4s;
+      }
+      .download:hover
+      {
+        color:white;
+        background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00);
+      }
+      ::-moz-selection { /* Code for Firefox */
+        color: white;
+        background: #00B9F1;
+        /* color: red; */
+        /* background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00); */
+      }
+
+      ::selection {
+        color: white;
+        background: #00B9F1;
+        /* background-image: linear-gradient(to bottom right,  #FF0000, #FFCC00); */
+      }
+      
+      .lds-ripple {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-ripple div {
+        position: absolute;
+        border: 4px solid #00B9F1;
+        opacity: 1;
+        border-radius: 50%;
+        animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+      }
+      .lds-ripple div:nth-child(2) {
+        animation-delay: -0.5s;
+      }
+      @keyframes lds-ripple {
+        0% {
+          top: 36px;
+          left: 36px;
+          width: 0;
+          height: 0;
+          opacity: 1;
+        }
+        100% {
+          top: 0px;
+          left: 0px;
+          width: 72px;
+          height: 72px;
+          opacity: 0;
+        }
+      }
+
+      .navbar
+      {
+        border-bottom: 1px solid rgb(224, 224, 224);
+      }
+
+      a
+      {
+        color:black;
+      }
+      .navbar-brand
+      {
+        margin-left: 50px;
+      }
+
+      .toggle_btn
+      {
+        padding: 2px;
+        font-size:20px;
+      }
+      
+      .navbar-toggler
+      {
+        outline: none;
+      }
+      .last
+      {
+        /* border-left:1px solid rgb(224, 224, 224); */
+        margin-right: 50px;
+      }
+      .vl
+      {
+        margin-right: 5px;
+        width: 0px;
+        border-left: 1px solid rgb(224, 224, 224);
+      }
+      .nav-link
+      {
+        margin: 0 12px;
+        font-size: 15px;
+        transition: 0.3s;
+        border: none;
+      }
+      .nav-link:hover
+      {
+        color:#00B9F1;
+        /* border-left: 1px solid #00B9F1; */
+      }
+      .upload
+      {
+        width: 150px;
+        border-radius: 5px;
+        color: white;
+        background: #00B9F1;
+        border: 1px solid #00B9F1;
+        font-weight: bolder;
+        transition: 0.3s;
+      }
+      .upload:hover
+      {
+        background: #00B9F1;
+        color: white;
+        
+      }
+      .left_div,.right_div,.sn_main
+      {
+        height: 653px;
+        /* border:1px solid black;  */
+        /* text-align: center;  */
+        /* display: -webkit-box;  
+        display: -ms-flexbox; 
+        display: -webkit-flex;  */
+        display: flex;       
+        
+        justify-content: center;
+        align-items: center;
+        
+        /* background-color: #3498db; */
+      }
+      .left_div_1,.right_div_1
+      {
+        height: 500px;
+        /* border:1px solid black;  */
+        /* text-align: center;  */
+        /* display: -webkit-box;  
+        display: -ms-flexbox; 
+        display: -webkit-flex;  */
+        display: flex;       
+        
+        justify-content: center;
+        align-items: center;
+        
+        /* background-color: #3498db; */
+      }
+      .left_div_2,.right_div_2
+      {
+        height: 650px;
+        /* border:1px solid black;  */
+        /* text-align: center;  */
+        /* display: -webkit-box;  
+        display: -ms-flexbox; 
+        display: -webkit-flex;  */
+        display: flex;       
+        
+        justify-content: center;
+        align-items: center;
+        
+        /* background-color: #3498db; */
+      }
+      .main_title
+      {
+        padding-left: 20px;
+        font-size: 51px;
+      }
+      .sub
+      {
+        padding-left: 20px;
+        font-size: 25px;
+      }
+
+      .sn_main
+      {
+        height: 640px;
+      }
+
+      .up2
+      {
+        margin-left: 20px;
+        border: 1px solid #00B9F1;
+        background: white;
+        color: #00B9F1;
+      }
+
+      .already_blue:hover
+      {
+        background: #00a5d8;
+      }
+
+      .circle {
+        border:none;
+        background-color: #00B9F1;
+        height: 50px;
+        color: white;
+        width: 50px;
+        border-radius: 100%;
+      }
+
+      .howtouse
+      {
+        font-size: 42px;
+      }
+
+      .desc
+      {
+        padding-left: 20px;
+      }
+
+      .alert
+      {
+        /* display: none; */
+      }
+
+      @media (max-width:768px){
+  
+        .left_div
+        {
+          font-size: 35px;
+          height: auto;
+          padding:30px;
+        }
+        .right_div
+        {
+          height: auto;
+        }
+        .right_div_1,.left_div_2
+        {
+          margin-left: 0;
+          height: auto;
+        }
+        .right_div_1
+        {
+          padding: 20px;
+        }
+        .left_div_1,.right_div_2
+        {
+          padding:30px;
+          height: auto;
+        }
+        .navbar-brand
+        {
+          margin-left: 10px;
+        }
+        .vl
+        {
+          display: none;
+        }
+        .sn_main
+        {
+          height: 500px;
+        }
+        .upload
+        {
+          width: auto;
+        }
+        .last
+        {
+          margin-right: 0px;
+        }
+        .main_title
+        {
+          padding-left: 0px;
+          font-size: 40px;
+        }
+        .sub
+        {
+          padding-left: 0px;
+          font-size: 22px;
+        }
+        .up2
+        {
+          margin-left: 0;
+        }
+        .howtouse
+        {
+          font-size: 33px;
+          margin-top: 80px;
+        }
+        .desc
+        {
+          padding-left: 0px;
+        }
+        .page4
+        {
+          margin-top: 50px;
+        }
+        .density_map
+        {
+          margin-top: 20px;
+        }
+        .d_map
+        {
+          margin-top: 15px;
+        }
+        .result
+        {
+          font-size: 33px;
+        }
+      }
+    </style>
+  </head>
+
+  <body onload="myFunction()">
+
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand" href="#"><b style="font-size: 23px; color: #00B9F1; font-weight: 800;">CROWD PREDICTOR</b></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars toggle_btn"></i>
+      </button>
+      <div class="collapse navbar-collapse " id="navbarNavDropdown">
+        <ul class="navbar-nav ml-auto text-center">
+          <li class="nav-item active py-1">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item py-1">
+              <a class="nav-link" href="#How-To-Use">How To Use</a>
+          </li>
+          <li class="nav-item py-1">
+            <a class="nav-link" href="#">About Predictor</a>
+          </li>
+          <li class="nav-item py-1">
+            <a class="nav-link" href="#">Team</a>
+          </li>
+          <li class="nav-item py-1 vl">
+            <a class="nav-link" href="#"></a>
+        </li>
+          <li class="nav-item py-1 last">
+              <a class="nav-link upload already_blue" href="#upload" >LET'S TRY</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    
+    <center>
+
+    <div class="" style="width:99%;" >
+      <div class="row" style="width: 99%;">
+        <div class="col-md left_div">
+          <div class="div_left_1">
+            <h1 class="main_title" style=" font-weight:700; text-align: justify; text-justify: inter-word;"> We make the crowd counting easy.</h1>
+            <h4 class="sub" style="margin-top: 10px; font-weight: 400;  text-align: justify; text-justify: inter-word;">All the tools you’ll need to be more productive and work smarter with documents.</h4>
+            <a class="nav-link upload already_blue" href="#How-To-Use" style=" float: left; margin-top: 10px;">HOW TO USE?</a>
+            <a class="nav-link upload up2" href="#upload" style=" float: left; margin-top: 10px;">LET'S TRY</a>
+            
+          </div>
+        </div>
+        <div class="col-md right_div" style="">
+          <img src="https://i.postimg.cc/hP151HxG/poster4.png" style="border: none;">
+        </div>
+      </div>
+      
+    </div>
+  </center>
+    
+  <center>
+    
+    <h1 class="main_title howtouse" id="How-To-Use" style=" font-weight: 700;" id="howtouse">How To Use?</h1>
+    <div class="" >
+      <div class="row" style="width: 99%;">
+        <div class="col-md left_div_1">
+          <img src="https://i.postimg.cc/QM2m3b5P/poster5.png" style="border: none;">
+        </div>
+        <div class="col-md right_div_1" style="">
+          <div class="">
+            <!-- <div class="circle">
+              <h3 style="line-height: 45px;">1</h3>
+              
+            </div> -->
+            <!-- <h3 style="font-weight: 700;" class="">1</h3> -->
+            <h5 class="desc" style=" font-weight:500; text-align: justify; text-justify: inter-word;">
+              Select an image from your storage using an <b>Choose File</b> option.<br><br>
+              After seleting an image click on <b>UPLOAD IMAGE</b> button and wait for time to get image processed.
+            </h4>
+            <!-- <h5 style=" font-weight:500; text-align: justify; text-justify: inter-word;">After seleting an image click on <b>UPLOAD IMAGE</b> button.</h4> -->
+
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+  </center>
+
+
+  <center>
+    
+    <div class="">
+      <div class="row" style="width: 99%;">
+        <div class="col-md left_div_2" style="">
+          <div class="">
+            <h5 class="desc" style=" font-weight:500; text-align: justify; text-justify: inter-word;">
+              After processing the image there will be a <b>Predicted count</b> and <b>Density map</b>.
+            </h5>
+            <h5 class="desc" style=" font-weight:500; text-align: justify; text-justify: inter-word;">
+              <br>
+              <b>What is Predicted count?</b><br>
+              Possible number of persons in that image.
+              <br><br>
+              <b>Density map?</b><br>
+              It is a image created using uploaded image and high concentation areas in density map shows high probability of person might present there. 
+            </h5>
+          </div>
+        </div>
+        <div class="col-md right_div_1 right_div_2" style="">
+          <img src="https://i.postimg.cc/0yKjKRbz/poster9-1.png" style="border: none; height: 600px; width: auto;  border-radius: 0;">
+          
+        </div>
+      </div>
+      
+    </div>
+    
+  </center>
+
+
+
+    <center>
+
+    <h1 style="padding-top: 50px; background:#F2F6FF;  font-weight: 700;" class="howtouse page4">Let's use Crowd Predictor</h1>
+    <div class="sn_main" style="background: #F2F6FF; margin-top: -10px;" id="upload">
+      <div class="outer" >  
+        <div class="inner">
+            <br><br>  
+            <h2 style="background-repeat: no-repeat;box-sizing: border-box; word-wrap: normal;-webkit-font-smoothing: antialiased;">Upload Image</h2>
+            <br>
+            <div class="alert alert-danger alert-dismissible fade show" style="width: 90%;" id="alert" role="alert">
+              <strong>Please select an image !</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="lds-ripple" id="loader"><div></div><div></div></div>
+            <b id="loading_text">Processing...</b>
+            <!-- <div class="spinner-border" role="status" id="loader">
+              <span class="sr-only">Loading...</span>
+            </div> -->
+            <form action="" method="post" id="form" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              {{form}}
+              <br><br>
+              <input type="submit" class="upload up2" value="UPLOAD IMAGE" onclick="validate()" id="submit"  data-toggle="tooltip" data-placement="top" title="Upload Image">
+            </form>
+            <br><br><br>
+        </div> 
+      </div>
+    </div>
+    </div>  
+  </center>
+
+  
+    <center>
+      
+      {% if uploaded_image %}
+        <div class="results" id="results">
+          <br>  
+          <h1 style="font-weight: 700;" class="result">Results</h1>
+          <br>
+          <div class="container">
+            <div class="row">
+              <div class="col-md">
+
+                <h5 style="font-weight: 500;">Normal Image</h5>
+                <img src="{{uploaded_image}}" style="max-height: 600px; width: auto; border: none;">
+                 
+              </div>
+              <div class="col-md d_map">
+                <h5 style="font-weight: 500;">Density Map</h5>
+                <img src="data:image/png;base64,{{density_map}}" style="max-height: 600px; width: auto; border: none;">
+                <br>
+                <a href="data:image/png;base64,{{density_map}}" download>
+                  <button class="upload up2" style="width: 250px; height: 43px; outline: none;">DOWNLOAD DENSITY MAP</button>
+                </a>
+              </div>
+            </div>
+          </div>
+          <br>
+          <h5 style="font-weight: 600;">Predicted count: {{count}}</h5>
+          <!-- <div>
+            <img src="{{uploaded_image}}">
+          <br>
+          <br>
+          <img src="data:image/png;base64,{{density_map}}">
+          <br>  
+          <a href="data:image/png;base64,{{density_map}}" download>
+              <button class="btn download"> Download Density Map</button>
+            </a>
+          <br>
+        </div>     -->
+        <br>
+      {% endif %}
+
+    </center>
+    
+    
+    {% if uploaded_image %}
+      <script>
+        window.location.href = '#results';
+      </script>
+    {% endif %}
+
+    <script>
+      document.getElementById("alert").style.display = "none";
+      function validate()
+      {
+        var inputs = document.getElementById("form").getElementsByTagName("input");
+        var i;
+        var length;
+        var value;
+
+        for (i = 0, length = inputs.length; i < length; i++) 
+        {
+            // Check we have [type='text']
+            if (inputs[i].type != "file") 
+            {
+                continue;
+            }
+            value = inputs[i].value;
+        }
+        if(value=="")
+        {
+          Swal.fire(
+            'Please select an image !',
+            '',
+            'warning'
+          )
+          event.preventDefault();
+          // setTimeout(function(){ alert("Hello"); }, 3000);
+          // document.getElementById("alert").style.display = "block";
+          // alert("Please select an image.")
+          // window.location.href = '#upload';
+        }
+        else
+        {
+          showLoading();
+        }
+      }
+
+      function myFunction() 
+      {
+
+        document.body.style.opacity='1';
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("loading_text").style.display = "none";
+        document.getElementById("form").style.display = "block";
+      }
+      
+      function showLoading()
+      {
+        document.getElementById("loading_text").style.display = "block";
+        document.getElementById("loader").style.display = "block";
+        document.getElementById("form").style.display = "none";
+      }
+      
+      if ( window.history.replaceState ) 
+      {
+        window.history.replaceState( null, null, window.location.href );
+      }
+
+      
+    </script>
+  
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+ 
+  </body>
+</html>
