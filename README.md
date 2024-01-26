@@ -4,10 +4,14 @@ This project provide simple webapp which is used to count number of people withi
 
 Project Banner
 
-![alt text](https://github.com/gopal031119/Crowd-Computing-Using-CNN/blob/WebApplicationImages/Home Page.png?raw=true)
-![alt text](https://github.com/gopal031119/Crowd-Computing-Using-CNN/blob/WebApplicationImages/How to Use 1.png?raw=true)
-![alt text](https://github.com/gopal031119/Crowd-Computing-Using-CNN/blob/WebApplicationImages/Results.png?raw=true)
+Home Page :-
+![Alt text](<WebApplicationImages/Home Page.png>)
 
+Upload Image:-
+![Alt text](<WebApplicationImages/How to Use 1.png>)
+
+Result:-
+![Alt text](WebApplicationImages/Results.png)
 
 Crowd-Computing-Using-CNN
 
